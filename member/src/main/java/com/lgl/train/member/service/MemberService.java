@@ -5,6 +5,7 @@ import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.ObjectUtil;
 import com.lgl.train.common.exception.BusinessException;
 import com.lgl.train.common.exception.BusinessExceptionEnum;
+import com.lgl.train.common.util.JwtUtil;
 import com.lgl.train.common.util.SnowUtil;
 import com.lgl.train.member.domain.Member;
 import com.lgl.train.member.domain.MemberExample;
@@ -80,7 +81,7 @@ public class MemberService {
         String code = req.getCode();
         Member memberDB = selectByMobile(mobile);
 
-        // 如果手机号不存在，则插入一条记录
+        // 如果手机号不存在，则报错
         if (ObjectUtil.isNull(memberDB)) {
             throw new BusinessException(BusinessExceptionEnum.MEMBER_MOBILE_NOT_EXIST);
         }
@@ -91,8 +92,8 @@ public class MemberService {
         }
 
         MemberLoginResp memberLoginResp = BeanUtil.copyProperties(memberDB, MemberLoginResp.class);
-        //String token = JwtUtil.createToken(memberLoginResp.getId(), memberLoginResp.getMobile());
-        //memberLoginResp.setToken(token);
+        String token = JwtUtil.createToken(memberLoginResp.getId(), memberLoginResp.getMobile());
+        memberLoginResp.setToken(token);
         return memberLoginResp;
     }
 
