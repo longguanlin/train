@@ -52,9 +52,9 @@
 </template>
 
 <script>
-import {defineComponent, ref} from 'vue';
+import {defineComponent, ref, watch} from 'vue';
 import store from "@/store";
-//import router from '@/router'
+import router from '@/router'
 
 export default defineComponent({
   name: "the-header-view",
@@ -62,11 +62,11 @@ export default defineComponent({
     let member = store.state.member;
     const selectedKeys = ref([]);
 
-    // watch(() => router.currentRoute.value.path, (newValue) => {
-    //   console.log('watch', newValue);
-    //   selectedKeys.value = [];
-    //   selectedKeys.value.push(newValue);
-    // }, {immediate: true});
+    watch(() => router.currentRoute.value.path, (newValue) => {
+      console.log('watch', newValue);
+      selectedKeys.value = [];
+      selectedKeys.value.push(newValue);
+    }, {immediate: true});
     return {
       member,
       selectedKeys
