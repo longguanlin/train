@@ -177,10 +177,10 @@ export default defineComponent({
     };
 
     onMounted(() => {
-      // handleQuery({
-      //   page: 1,
-      //   size: pagination.value.pageSize
-      // });
+      handleQuery({
+        page: 1,
+        size: pagination.value.pageSize
+      });
     });
 
     return {
