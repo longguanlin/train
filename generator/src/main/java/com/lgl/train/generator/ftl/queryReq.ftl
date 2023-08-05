@@ -1,6 +1,6 @@
-package com.jiawa.train.${module}.req;
+package com.lgl.train.${module}.req;
 
-import com.jiawa.train.common.req.PageReq;
+import com.lgl.train.common.req.PageReq;
 
 public class ${Domain}QueryReq extends PageReq {
 
