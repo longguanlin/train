@@ -1,15 +1,16 @@
 package com.lgl.train.business.controller.admin;
 
-import com.lgl.train.common.context.LoginMemberContext;
-import com.lgl.train.common.resp.CommonResp;
-import com.lgl.train.common.resp.PageResp;
 import com.lgl.train.business.req.StationQueryReq;
 import com.lgl.train.business.req.StationSaveReq;
 import com.lgl.train.business.resp.StationQueryResp;
 import com.lgl.train.business.service.StationService;
+import com.lgl.train.common.resp.CommonResp;
+import com.lgl.train.common.resp.PageResp;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/admin/station")
@@ -36,4 +37,9 @@ public class StationAdminController {
         return new CommonResp<>();
     }
 
+    @GetMapping("/query-all")
+    public CommonResp<List<StationQueryResp>> queryList() {
+        List<StationQueryResp> list = stationService.queryAll();
+        return new CommonResp<>(list);
+    }
 }
