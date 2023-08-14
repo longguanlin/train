@@ -1,15 +1,17 @@
 package com.lgl.train.business.controller.admin;
 
-import com.lgl.train.common.context.LoginMemberContext;
-import com.lgl.train.common.resp.CommonResp;
-import com.lgl.train.common.resp.PageResp;
 import com.lgl.train.business.req.DailyTrainQueryReq;
 import com.lgl.train.business.req.DailyTrainSaveReq;
 import com.lgl.train.business.resp.DailyTrainQueryResp;
 import com.lgl.train.business.service.DailyTrainService;
+import com.lgl.train.common.resp.CommonResp;
+import com.lgl.train.common.resp.PageResp;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Date;
 
 @RestController
 @RequestMapping("/admin/daily-train")
@@ -36,4 +38,9 @@ public class DailyTrainAdminController {
         return new CommonResp<>();
     }
 
+    @GetMapping("/gen-daily/{date}")
+    public CommonResp<Object> genDaily(@PathVariable @DateTimeFormat(pattern = "yyyy-MM-dd") Date date) {
+        dailyTrainService.genDaily(date);
+        return new CommonResp<>();
+    }
 }
