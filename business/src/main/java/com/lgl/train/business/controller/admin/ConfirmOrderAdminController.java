@@ -1,12 +1,11 @@
 package com.lgl.train.business.controller.admin;
 
-import com.lgl.train.common.context.LoginMemberContext;
-import com.lgl.train.common.resp.CommonResp;
-import com.lgl.train.common.resp.PageResp;
+import com.lgl.train.business.req.ConfirmOrderDoReq;
 import com.lgl.train.business.req.ConfirmOrderQueryReq;
-import com.lgl.train.business.req.ConfirmOrderSaveReq;
 import com.lgl.train.business.resp.ConfirmOrderQueryResp;
 import com.lgl.train.business.service.ConfirmOrderService;
+import com.lgl.train.common.resp.CommonResp;
+import com.lgl.train.common.resp.PageResp;
 import jakarta.annotation.Resource;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +18,7 @@ public class ConfirmOrderAdminController {
     private ConfirmOrderService confirmOrderService;
 
     @PostMapping("/save")
-    public CommonResp<Object> save(@Valid @RequestBody ConfirmOrderSaveReq req) {
+    public CommonResp<Object> save(@Valid @RequestBody ConfirmOrderDoReq req) {
         confirmOrderService.save(req);
         return new CommonResp<>();
     }
