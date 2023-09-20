@@ -26,16 +26,20 @@ import com.lgl.train.common.exception.BusinessExceptionEnum;
 import com.lgl.train.common.resp.PageResp;
 import com.lgl.train.common.util.SnowUtil;
 import jakarta.annotation.Resource;
+import org.redisson.api.RLock;
+import org.redisson.api.RedissonClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class ConfirmOrderService {
@@ -56,15 +60,15 @@ public class ConfirmOrderService {
 
     @Resource
     private AfterConfirmOrderService afterConfirmOrderService;
-//
-//    @Autowired
-//    private StringRedisTemplate redisTemplate;
 
     @Autowired
-    private SkTokenService skTokenService;
+    private StringRedisTemplate redisTemplate;
+//
+//    @Autowired
+//    private SkTokenService skTokenService;
 
-    // @Autowired
-    // private RedissonClient redissonClient;
+     @Autowired
+     private RedissonClient redissonClient;
 
     public void save(ConfirmOrderDoReq req) {
         DateTime now = DateTime.now();
@@ -135,7 +139,7 @@ public class ConfirmOrderService {
 //            return;
 //        }
 
-        // RLock lock = null;
+        RLock lock = null;
         /*
             关于红锁，看16.7节：
             A B C D E
@@ -144,33 +148,33 @@ public class ConfirmOrderService {
             3: C
         */
         try {
-            // // 使用redisson，自带看门狗
-            // lock = redissonClient.getLock(lockKey);
-            //
-            // // 红锁的写法
-            // // RedissonRedLock redissonRedLock = new RedissonRedLock(lock, lock, lock);
-            // // boolean tryLock1 = redissonRedLock.tryLock(0, TimeUnit.SECONDS);
-            //
-            // /**
-            //   waitTime – the maximum time to acquire the lock 等待获取锁时间(最大尝试获得锁的时间)，超时返回false
-            //   leaseTime – lease time 锁时长，即n秒后自动释放锁
-            //   time unit – time unit 时间单位
-            //  */
-            // // boolean tryLock = lock.tryLock(30, 10, TimeUnit.SECONDS); // 不带看门狗
-            // boolean tryLock = lock.tryLock(0, TimeUnit.SECONDS); // 带看门狗
-            // if (tryLock) {
-            //     LOG.info("恭喜，抢到锁了！");
-            //     // 可以把下面这段放开，只用一个线程来测试，看看redisson的看门狗效果
-            //     // for (int i = 0; i < 30; i++) {
-            //     //     Long expire = redisTemplate.opsForValue().getOperations().getExpire(lockKey);
-            //     //     LOG.info("锁过期时间还有：{}", expire);
-            //     //     Thread.sleep(1000);
-            //     // }
-            // } else {
-            //     // 只是没抢到锁，并不知道票抢完了没，所以提示稍候再试
-            //     LOG.info("很遗憾，没抢到锁");
-            //     throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_LOCK_FAIL);
-            // }
+             // 使用redisson，自带看门狗
+             lock = redissonClient.getLock(lockKey);
+
+             // 红锁的写法
+             // RedissonRedLock redissonRedLock = new RedissonRedLock(lock, lock, lock);
+             // boolean tryLock1 = redissonRedLock.tryLock(0, TimeUnit.SECONDS);
+
+             /**
+               waitTime – the maximum time to acquire the lock 等待获取锁时间(最大尝试获得锁的时间)，超时返回false
+               leaseTime – lease time 锁时长，即n秒后自动释放锁
+               time unit – time unit 时间单位
+              */
+             // boolean tryLock = lock.tryLock(30, 10, TimeUnit.SECONDS); // 不带看门狗
+             boolean tryLock = lock.tryLock(0, TimeUnit.SECONDS); // 带看门狗
+             if (tryLock) {
+                 LOG.info("恭喜，抢到锁了！");
+                 // 可以把下面这段放开，只用一个线程来测试，看看redisson的看门狗效果
+                 // for (int i = 0; i < 30; i++) {
+                 //     Long expire = redisTemplate.opsForValue().getOperations().getExpire(lockKey);
+                 //     LOG.info("锁过期时间还有：{}", expire);
+                 //     Thread.sleep(1000);
+                 // }
+             } else {
+                 // 只是没抢到锁，并不知道票抢完了没，所以提示稍候再试
+                 LOG.info("很遗憾，没抢到锁");
+                 throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_LOCK_FAIL);
+             }
 
             while (true) {
                 // 取确认订单表的记录，同日期车次，状态是I，分页处理，每次取N条
@@ -208,16 +212,16 @@ public class ConfirmOrderService {
 
             // LOG.info("购票流程结束，释放锁！lockKey：{}", lockKey);
             // redisTemplate.delete(lockKey);
-        // } catch (InterruptedException e) {
-        //     LOG.error("购票异常", e);
+        } catch (InterruptedException e) {
+             LOG.error("购票异常", e);
         } finally {
             // try finally不能包含加锁的那段代码，否则加锁失败会走到finally里，从而释放别的线程的锁
             LOG.info("购票流程结束，释放锁！lockKey：{}", lockKey);
             //redisTemplate.delete(lockKey);
-            // LOG.info("购票流程结束，释放锁！");
-            // if (null != lock && lock.isHeldByCurrentThread()) {
-            //     lock.unlock();
-            // }
+             LOG.info("购票流程结束，释放锁！");
+             if (null != lock && lock.isHeldByCurrentThread()) {
+                 lock.unlock();
+             }
         }
 
     }
