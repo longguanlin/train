@@ -23,9 +23,9 @@
 
         <!-- 配置数据源，需要根据自己的项目修改 -->
         <jdbcConnection driverClass="com.mysql.cj.jdbc.Driver"
-                        connectionURL="jdbc:mysql://mydb-1.cyvhvcwqluuv.ap-northeast-1.rds.amazonaws.com/train-business?serverTimezone=Asia/Shanghai"
-                        userId="root"
-                        password="CTcRGK667h5VNmVz">
+                        connectionURL="jdbc:mysql://192.168.176.124:5508/train_business?serverTimezone=Asia/Shanghai"
+                        userId="train_business"
+                        password="Business123">
         </jdbcConnection>
 
         <!-- domain类的位置 targetProject是相对pom.xml的路径-->
