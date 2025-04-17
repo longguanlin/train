@@ -23,6 +23,7 @@ import com.lgl.train.business.req.ConfirmOrderDoReq;
 import com.lgl.train.business.req.ConfirmOrderQueryReq;
 import com.lgl.train.business.req.ConfirmOrderTicketReq;
 import com.lgl.train.business.resp.ConfirmOrderQueryResp;
+import com.lgl.train.common.context.LoginMemberContext;
 import com.lgl.train.common.exception.BusinessException;
 import com.lgl.train.common.exception.BusinessExceptionEnum;
 import com.lgl.train.common.resp.PageResp;
@@ -65,12 +66,12 @@ public class ConfirmOrderService {
 
     @Autowired
     private StringRedisTemplate redisTemplate;
-//
-//    @Autowired
-//    private SkTokenService skTokenService;
 
-     @Autowired
-     private RedissonClient redissonClient;
+    @Autowired
+    private SkTokenService skTokenService;
+
+    @Autowired
+    private RedissonClient redissonClient;
 
     public void save(ConfirmOrderDoReq req) {
         DateTime now = DateTime.now();
@@ -117,15 +118,15 @@ public class ConfirmOrderService {
     public void doConfirm(ConfirmOrderDoReq dto) {
         MDC.put("LOG_ID", dto.getLogId());
         LOG.info("异步出票开始：{}", dto);
-        // // 校验令牌余量
-        // boolean validSkToken = skTokenService.validSkToken(dto.getDate(), dto.getTrainCode(), LoginMemberContext.getId());
-        // if (validSkToken) {
-        //     LOG.info("令牌校验通过");
-        // } else {
-        //     LOG.info("令牌校验不通过");
-        //     throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_SK_TOKEN_FAIL);
-        // }
-        //
+         // 校验令牌余量
+         boolean validSkToken = skTokenService.validSkToken(dto.getDate(), dto.getTrainCode(), LoginMemberContext.getId());
+         if (validSkToken) {
+             LOG.info("令牌校验通过");
+         } else {
+             LOG.info("令牌校验不通过");
+             throw new BusinessException(BusinessExceptionEnum.CONFIRM_ORDER_SK_TOKEN_FAIL);
+         }
+
         // 获取分布式锁
         String lockKey = RedisKeyPreEnum.CONFIRM_ORDER + "-" + DateUtil.formatDate(dto.getDate()) + "-" + dto.getTrainCode();
         // setIfAbsent就是对应redis的setnx
