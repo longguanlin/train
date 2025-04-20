@@ -4,7 +4,7 @@
     <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="train" enabled="true">
       <boolProp name="TestPlan.functional_mode">false</boolProp>
       <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
-      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">true</boolProp>
       <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="用户定义的变量" enabled="true">
         <collectionProp name="Arguments.arguments"/>
       </elementProp>
@@ -47,7 +47,7 @@
         <stringProp name="filename"></stringProp>
       </ResultCollector>
       <hashTree/>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="线程组" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="线程组" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
           <stringProp name="LoopController.loops">1</stringProp>
@@ -161,13 +161,13 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="线程组" enabled="false">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="线程组" enabled="true">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
-          <stringProp name="LoopController.loops">10</stringProp>
+          <stringProp name="LoopController.loops">1</stringProp>
           <boolProp name="LoopController.continue_forever">false</boolProp>
         </elementProp>
-        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.num_threads">20</stringProp>
         <stringProp name="ThreadGroup.ramp_time">1</stringProp>
         <boolProp name="ThreadGroup.scheduler">false</boolProp>
         <stringProp name="ThreadGroup.duration"></stringProp>
@@ -184,17 +184,17 @@
                 <boolProp name="HTTPArgument.always_encode">false</boolProp>
                 <stringProp name="Argument.value">{&#xd;
   &quot;dailyTrainTicketId&quot;:1654066742160396288,&#xd;
-  &quot;date&quot;:&quot;2023-06-01&quot;,&#xd;
-  &quot;end&quot;:&quot;北京&quot;,&#xd;
+  &quot;date&quot;:&quot;2025-04-22&quot;,&#xd;
+  &quot;end&quot;:&quot;湛江&quot;,&#xd;
   &quot;start&quot;:&quot;广州&quot;,&#xd;
   &quot;tickets&quot;: [{&#xd;
-    &quot;passengerId&quot;:1648269938382737408,&#xd;
-    &quot;passengerIdCard&quot;:&quot;123231&quot;,&#xd;
-    &quot;passengerName&quot;:&quot;王五&quot;,&#xd;
-    &quot;passengerType&quot;:&quot;3&quot;,&#xd;
+    &quot;passengerId&quot;:1911385620102647808,&#xd;
+    &quot;passengerIdCard&quot;:&quot;45485454444444444&quot;,&#xd;
+    &quot;passengerName&quot;:&quot;龙&quot;,&#xd;
+    &quot;passengerType&quot;:&quot;1&quot;,&#xd;
     &quot;seatTypeCode&quot;:&quot;2&quot;&#xd;
   }],&#xd;
-  &quot;trainCode&quot;:&quot;G1&quot;,&#xd;
+  &quot;trainCode&quot;:&quot;G6717&quot;,&#xd;
   &quot;imageCode&quot;:&quot;123&quot;,&#xd;
   &quot;imageCodeToken&quot;:&quot;321&quot;&#xd;
 }</stringProp>
@@ -309,7 +309,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="business/hello" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="business/hello" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
           <intProp name="LoopController.loops">-1</intProp>
@@ -394,7 +394,7 @@
           <hashTree/>
         </hashTree>
       </hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="business/hello1" enabled="true">
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="business/hello1" enabled="false">
         <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
         <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="循环控制器" enabled="true">
           <intProp name="LoopController.loops">-1</intProp>
